@@ -1,0 +1,76 @@
+Cake problem - STRIPS
+
+I = {Empty(right), Empty(left), Available(Luck), Available(Wealth), 
+    Available(Health),
+    NotStamped(s,c) for each s in {Wealth,Health,Luck} and
+    for each c in {chicken, veggie, rose}
+}
+
+G = {Stamped(Health, veggie), Stamped(Wealth, chicken)
+    Stamped(Luck, rose), Stamped(Health, rose)}
+    U {NotStamped(s, veggie) for s in {Wealth, Luck}}
+    U {NotStamped(s, chicken) for s in {Health, Luck}
+    U {NotStamped(Wealth, rose)}}
+
+LookAt(c)
+- pre : {}
+- add : {focusing(c)}
+- del : {focusing(c1), focusing(c2)}
+for each c,c1,c2 and c /= c1 /= c2
+
+PickUp(h, s)
+- pre : {Empty(h), Available(s)}
+- add : {Holding(h, s)}
+- del : {Empty(h), Available(s)}
+for each h in {right, left}, for each s in {Wealth, Luck, Health}
+
+Drop(h, s)
+- pre: {Holding(h, s)}
+- add: {Empty(h), Available(s)}
+- del: {Holding(h, s)}
+for each h in {right, left}, for each s in {Wealth, Luck, Health}
+
+Stamp(c, s, h)
+- pre: {Holding(h, s), focusing(c), NotStamped(c, s)} 
+- add: {Stamped(c, s)}
+- del: {NotStamped(c, s)}
+for each h in {right, left}, for each s in {Wealth, Luck, Health},
+for each c in {rose, chicken, veggie}
+
+-------------------------------------------------------------------
+
+Pigeon problem - FDR
+
+V = {at-pigeon = {L1, L2, L3},
+    mes-found = {T, F},
+    mes-sent = {T, F},
+    adj(L1, L2) = {T, F} // alternative way to represent adjacency to the one we saw together in class
+    adj(L2, L3) = {T, F}
+    adj(L2, L1) = {T, F}
+    adj(L3, L2) = {T, F}
+    }
+
+
+I = {at-pigeon = L1, mes-found = F, mes-sent = F,
+    adj(L1, L2) = T,
+    adj(L2, L1) = T,
+    adj(L2, L3) = T, 
+    adj(L3, L2) = T}
+
+G = {mes-sent = T}
+
+move(x, y)
+- pre = {at-pigeon = x, adj(x, y) = T}
+- eff = {at-pigeon = y}
+for each x, y in {L1,L2,L3}
+
+take-mess
+- pre = {at-pigeon = L2}
+- eff = {mess-found = T}
+
+send-mess
+- pre = {at-pigeon = L3, mess-found = T}
+- eff = {mess-sent = T}
+
+-------------------------------------------------------------------
+
